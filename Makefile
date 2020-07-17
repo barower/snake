@@ -1,7 +1,10 @@
 default: build
 
-build:
-	gcc -o snake src/main.c src/backend.c src/frontend.c -lncurses
+target/release/librust_snake.a:
+	cargo build --verbose --release
+
+build: target/release/librust_snake.a
+	gcc -o snake src/main.c src/backend.c src/frontend.c target/release/librust_snake.a -lncurses
 
 run: build
 	./snake
@@ -12,4 +15,5 @@ tests:
 	./run_tests
 
 clean:
+	cargo clean
 	rm snake run_tests
