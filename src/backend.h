@@ -18,7 +18,7 @@ typedef struct {
 } Board;
 
 
-bool is_same_place(PointList* cell1, PointList* cell2);
+extern bool is_same_place(PointList* cell1, PointList* cell2);
 enum Status move_snake(Board* board, enum Direction dir);
 PointList* next_move(Board* board, enum Direction dir);
 PointList* create_cell(int x, int y);

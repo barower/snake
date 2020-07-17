@@ -1,4 +1,5 @@
 extern crate libc;
+use libc::c_int;
 
 #[repr(C)]
 pub enum Direction {
@@ -16,8 +17,8 @@ pub enum Status {
 
 #[repr(C)]
 pub struct PointList {
-    x: isize,
-    y: isize,
+    x: c_int,
+    y: c_int,
     next: *mut PointList,
 }
 
@@ -25,7 +26,12 @@ pub struct PointList {
 pub struct Board {
     snake: *mut PointList,
     foods: *mut PointList,
-    xmax: isize,
-    ymax: isize,
+    xmax: c_int,
+    ymax: c_int,
+}
+
+#[no_mangle]
+pub unsafe extern fn is_same_place(cell1: *mut PointList, cell2: *mut PointList) -> bool {
+    ((*cell1).x == (*cell2).x) && ((*cell1).y == (*cell2).y)
 }
 

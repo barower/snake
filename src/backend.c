@@ -73,11 +73,6 @@ enum Status move_snake(Board* board, enum Direction dir) {
   return SUCCESS;
 }
 
-bool is_same_place(PointList* cell1, PointList* cell2) {
-  return cell1->x == cell2->x && cell1->y == cell2->y;
-}
-
-
 PointList* next_move(Board* board, enum Direction dir) {
   PointList* snake = board->snake;
   int new_x = snake->x;
