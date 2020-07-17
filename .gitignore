@@ -3,3 +3,5 @@ test/test.c
 run_tests
 /target
 Cargo.lock
+tags
+
