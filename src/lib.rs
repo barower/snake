@@ -1,7 +1,7 @@
 extern crate libc;
 extern crate rand;
 
-use libc::{c_int, malloc};
+use libc::{c_int, c_void, malloc, free};
 use std::ptr;
 use std::mem::size_of;
 use rand::Rng;
@@ -102,6 +102,33 @@ pub unsafe extern "C" fn create_board(snake: *mut PointList, foods: *mut PointLi
     (*board).xmax = xmax;
     (*board).ymax = ymax;
     board
+}
+
+/*
+ * Removes from the list or returns false
+ */
+#[no_mangle]
+pub unsafe extern "C" fn remove_from_list(elt: *mut PointList, list: *mut *mut PointList) -> bool {
+    let mut curr_p: *mut PointList = *list;
+    let mut prev_p: *mut PointList = ptr::null_mut();
+
+    // Originally a for loop
+    while curr_p != ptr::null_mut() {
+        if is_same_place(curr_p, elt) {
+            if prev_p == ptr::null_mut() {
+                *list = (*curr_p).next;
+            } else {
+                (*prev_p).next = (*curr_p).next;
+            }
+            free(curr_p as *mut c_void);
+            return true;
+        }
+
+        prev_p = curr_p;
+        curr_p = (*curr_p).next;
+    }
+
+    false
 }
 
 #[no_mangle]

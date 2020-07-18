@@ -4,29 +4,6 @@
 #include <stdbool.h>
 #include <time.h>
 
-/*
- * Removes from the list or returns false
- */
-bool remove_from_list(PointList* elt, PointList** list) {
-  PointList *currP, *prevP;
-  prevP = NULL;
-
-  for (currP = *list;
-      currP != NULL;
-      prevP = currP, currP = currP->next) {
-    if (is_same_place(currP, elt)) {
-      if (prevP == NULL) {
-        *list = currP->next;
-      } else {
-        prevP->next = currP->next;
-      }
-      free(currP);
-      return true;
-    }
-  }
-  return false;
-}
-
 enum Status move_snake(Board* board, enum Direction dir) {
   // Create a new beginning. Check boundaries.
   PointList* beginning = next_move(board, dir);
