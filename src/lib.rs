@@ -190,3 +190,17 @@ pub unsafe extern "C" fn add_new_food(board: *mut Board) {
     (*board).foods = new_food;
 }
 
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /*
+    #[test]
+    #[should_panic(expected = "Divide result is zero")]
+    fn test_specific_panic() {
+        divide_non_zero_result(1, 10);
+    }
+    */
+}
+
