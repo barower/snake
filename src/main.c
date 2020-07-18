@@ -1,4 +1,4 @@
-#include "backend.h"
+#include "../backend/src/backend.h"
 #include "frontend.h"
 #include <ncurses.h>
 

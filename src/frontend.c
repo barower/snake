@@ -1,5 +1,5 @@
 #include <ncurses.h>
-#include "backend.h"
+#include "../backend/src/backend.h"
 #include "frontend.h"
 
 void display_points(PointList* snake, const chtype symbol) {
