@@ -116,10 +116,3 @@ Board* create_board(PointList* snake, PointList* foods, int xmax, int ymax) {
   return board;
 }
 
-PointList* create_snake() {
-  PointList* a = create_cell(2,3);
-  PointList* b = create_cell(2,2);
-  a->next = b;
-  return a;
-}
-

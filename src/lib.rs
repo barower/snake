@@ -66,3 +66,12 @@ pub unsafe extern "C" fn create_random_cell(xmax: c_int, ymax: c_int) -> *mut Po
     let mut rng = rand::thread_rng();
     create_cell(rng.gen_range(0, xmax-1), rng.gen_range(0, ymax-1))
 }
+
+#[no_mangle]
+pub unsafe extern "C" fn create_snake() -> *mut PointList {
+    let a: *mut PointList = create_cell(2,2);
+    let b: *mut PointList = create_cell(2,3);
+    (*a).next = b;
+    a
+}
+

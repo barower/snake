@@ -23,7 +23,7 @@ enum Status move_snake(Board* board, enum Direction dir);
 PointList* next_move(Board* board, enum Direction dir);
 extern PointList* create_cell(int x, int y);
 extern PointList* create_random_cell(int xmax, int ymax);
-PointList* create_snake();
+extern PointList* create_snake();
 Board* create_board(PointList* foods, PointList* snake, int xmax, int ymax);
 extern bool list_contains(PointList* cell, PointList* list);
 bool remove_from_list(PointList* elt, PointList** list);
