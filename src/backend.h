@@ -17,8 +17,6 @@ typedef struct {
   int ymax;
 } Board;
 
-// Remove
-extern bool is_same_place(PointList* cell1, PointList* cell2);
 extern enum Status move_snake(Board* board, enum Direction dir);
 // Remove
 extern PointList* next_move(Board* board, enum Direction dir);

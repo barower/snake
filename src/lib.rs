@@ -35,9 +35,8 @@ pub struct Board {
     ymax: c_int,
 }
 
-#[no_mangle]
-pub unsafe extern "C" fn is_same_place(cell1: *mut PointList, cell2: *mut PointList) -> bool {
-    ((*cell1).x == (*cell2).x) && ((*cell1).y == (*cell2).y)
+fn is_same_place(cell1: &PointList, cell2: &PointList) -> bool {
+    (cell1.x == cell2.x) && (cell1.y == cell2.y)
 }
 
 #[no_mangle]
@@ -49,7 +48,7 @@ pub unsafe extern "C" fn move_snake(board: *mut Board, dir: Direction) -> Status
     }
 
     // If we've gone backwards, don't do anything
-    if (*(*board).snake).next != ptr::null_mut() && is_same_place(beginning, (*(*board).snake).next) {
+    if (*(*board).snake).next != ptr::null_mut() && is_same_place(&*beginning, &*(*(*board).snake).next) {
         (*beginning).next = ptr::null_mut();
         free(beginning as *mut c_void);
         return Status::SUCCESS;
@@ -110,7 +109,7 @@ pub unsafe extern "C" fn next_move(board: *mut Board, dir: Direction) -> *mut Po
 pub unsafe extern "C" fn list_contains(cell: *mut PointList, list: *mut PointList) -> bool {
     let mut s: *mut PointList = list;
     while s != ptr::null_mut() {
-        if is_same_place(s, cell) {
+        if is_same_place(&*s, &*cell) {
             return true;
         }
         s = (*s).next;
@@ -161,7 +160,7 @@ pub unsafe extern "C" fn remove_from_list(elt: *mut PointList, list: *mut *mut P
 
     // Originally a for loop
     while curr_p != ptr::null_mut() {
-        if is_same_place(curr_p, elt) {
+        if is_same_place(&*curr_p, &*elt) {
             if prev_p == ptr::null_mut() {
                 *list = (*curr_p).next;
             } else {
