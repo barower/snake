@@ -1,6 +1,7 @@
 extern crate libc;
-use libc::c_int;
+use libc::{c_int, malloc};
 use std::ptr;
+use std::mem::size_of;
 
 #[repr(C)]
 pub enum Direction {
@@ -48,3 +49,11 @@ pub unsafe extern fn list_contains(cell: *mut PointList, list: *mut PointList) -
     return false;
 }
 
+#[no_mangle]
+pub unsafe extern fn create_cell(x: c_int, y: c_int) -> *mut PointList {
+    let cell: *mut PointList = malloc(size_of::<PointList>()) as *mut PointList;
+    (*cell).x = x;
+    (*cell).y = y;
+    (*cell).next = ptr::null_mut();
+    cell
+}
