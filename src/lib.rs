@@ -75,3 +75,12 @@ pub unsafe extern "C" fn create_snake() -> *mut PointList {
     a
 }
 
+#[no_mangle]
+pub unsafe extern "C" fn create_board(snake: *mut PointList, foods: *mut PointList, xmax: c_int, ymax: c_int) -> *mut Board {
+    let board: *mut Board = malloc(size_of::<Board>()) as *mut Board;
+    (*board).foods = foods;
+    (*board).snake = snake;
+    (*board).xmax = xmax;
+    (*board).ymax = ymax;
+    board
+}

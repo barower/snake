@@ -107,12 +107,3 @@ void add_new_food(Board* board) {
   board->foods = new_food;
 }
 
-Board* create_board(PointList* snake, PointList* foods, int xmax, int ymax) {
-  Board* board = malloc(sizeof(*board));
-  board->foods = foods;
-  board->snake = snake;
-  board->xmax = xmax;
-  board->ymax = ymax;
-  return board;
-}
-
