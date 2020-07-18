@@ -111,17 +111,6 @@ void add_new_food(Board* board) {
   board->foods = new_food;
 }
 
-bool list_contains(PointList* cell, PointList* list) {
-  PointList* s = list;
-  while (s) {
-    if (is_same_place(s, cell)) {
-      return true;
-    }
-    s = s->next;
-  }
-  return false;
-}
-
 PointList* create_cell(int x, int y) {
   PointList* cell = malloc(sizeof(*cell));
   cell->x = x;
