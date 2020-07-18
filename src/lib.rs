@@ -41,6 +41,53 @@ pub unsafe extern "C" fn is_same_place(cell1: *mut PointList, cell2: *mut PointL
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn move_snake(board: *mut Board, dir: Direction) -> Status {
+    // Create a new beginning. Check boundaries.
+    let beginning: *mut PointList = next_move(board, dir);
+    if beginning == ptr::null_mut() {
+        return Status::FAILURE;
+    }
+
+    // If we've gone backwards, don't do anything
+    if (*(*board).snake).next != ptr::null_mut() && is_same_place(beginning, (*(*board).snake).next) {
+        (*beginning).next = ptr::null_mut();
+        free(beginning as *mut c_void);
+        return Status::SUCCESS;
+    }
+
+    // Check for collisions
+    if list_contains(beginning, (*board).snake) {
+        return Status::FAILURE;
+    }
+
+    // Check for food
+    if list_contains(beginning, (*board).foods) {
+        // Attach the beginning to the rest of the snake;
+        (*beginning).next = (*board).snake;
+        (*board).snake = beginning;
+        remove_from_list(beginning, &mut((*board).foods));
+        add_new_food(board);
+
+        return Status::SUCCESS;
+    }
+
+    // Attach the beginning to the rest of the snake
+    (*beginning).next = (*board).snake;
+    (*board).snake = beginning;
+
+    // Cut off the end
+    let mut end: *mut PointList = (*board).snake;
+    while (*(*end).next).next != ptr::null_mut() {
+        end = (*end).next;
+    }
+    free((*end).next as *mut c_void);
+    (*end).next = ptr::null_mut();
+
+    return Status::SUCCESS;
+}
+
+
+#[no_mangle]
 pub unsafe extern "C" fn next_move(board: *mut Board, dir: Direction) -> *mut PointList {
     let snake: *mut PointList = (*board).snake;
     let mut new_x: c_int = (*snake).x;
