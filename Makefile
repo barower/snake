@@ -4,7 +4,7 @@ backend/target/release/librust_snake.a:
 	cargo build --verbose --release --manifest-path backend/Cargo.toml
 
 build: backend/target/release/librust_snake.a
-	gcc -o snake src/main.c src/frontend.c backend/target/release/librust_snake.a -lncurses -ldl -lpthread -lm
+	gcc -o snake frontend/src/main.c frontend/src/frontend.c backend/target/release/librust_snake.a -lncurses -ldl -lpthread -lm
 
 run: build
 	./snake
@@ -17,4 +17,5 @@ tests: backend/target/release/librust_snake.a
 
 clean:
 	cargo clean --manifest-path backend/Cargo.toml
+	cargo clean --manifest-path frontend/Cargo.toml
 	rm -f snake run_tests

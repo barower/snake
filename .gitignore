@@ -2,6 +2,7 @@ snake
 test/test.c
 run_tests
 backend/target
+frontend/target
 Cargo.lock
 tags
 
