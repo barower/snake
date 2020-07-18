@@ -27,4 +27,4 @@ extern PointList* create_snake();
 extern Board* create_board(PointList* foods, PointList* snake, int xmax, int ymax);
 extern bool list_contains(PointList* cell, PointList* list);
 bool remove_from_list(PointList* elt, PointList** list);
-void add_new_food(Board* board);
+extern void add_new_food(Board* board);

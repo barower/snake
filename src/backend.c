@@ -98,12 +98,3 @@ PointList* next_move(Board* board, enum Direction dir) {
   }
 }
 
-void add_new_food(Board* board) {
-  PointList* new_food;
-  do {
-    new_food = create_random_cell(board->xmax, board->ymax);
-  } while(list_contains(new_food, board->foods) || list_contains(new_food, board->snake));
-  new_food->next = board->foods;
-  board->foods = new_food;
-}
-

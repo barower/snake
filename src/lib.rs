@@ -84,3 +84,16 @@ pub unsafe extern "C" fn create_board(snake: *mut PointList, foods: *mut PointLi
     (*board).ymax = ymax;
     board
 }
+
+#[no_mangle]
+pub unsafe extern "C" fn add_new_food(board: *mut Board) {
+    let mut new_food: *mut PointList;
+    loop {
+        // Ouch
+        new_food = create_random_cell((*board).xmax, (*board).ymax);
+        if !(list_contains(new_food, (*board).foods) || list_contains(new_food, (*board).snake)) { break; }
+    }
+    (*new_food).next = (*board).foods;
+    (*board).foods = new_food;
+}
+
