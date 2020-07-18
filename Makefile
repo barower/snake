@@ -9,11 +9,11 @@ build: target/release/librust_snake.a
 run: build
 	./snake
 
-tests:
+tests: target/release/librust_snake.a
 	checkmk test/test.ts > test/test.c
-	gcc -o run_tests src/backend.c src/backend.h test/test.c -lncurses -lcheck
+	gcc -o run_tests src/backend.c src/backend.h target/release/librust_snake.a test/test.c -lncurses -lcheck -lsubunit -lrt -lpthread -lm
 	./run_tests
 
 clean:
 	cargo clean
-	rm snake run_tests
+	rm -f snake run_tests
