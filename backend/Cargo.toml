@@ -1,5 +1,5 @@
 [package]
-name = "rust_snake"
+name = "snake_backend"
 version = "0.1.0"
 authors = ["Bartłomiej Osiński <bartlomiej.osinski@enigma.com.pl>"]
 edition = "2018"

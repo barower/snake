@@ -1,5 +1,5 @@
 [package]
-name = "frontend"
+name = "snake_frontend"
 version = "0.1.0"
 authors = ["Bartłomiej Osiński <bartlomiej.osinski@enigma.com.pl>"]
 edition = "2018"

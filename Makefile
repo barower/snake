@@ -1,17 +1,17 @@
 default: build
 
-backend/target/release/librust_snake.a:
+backend/target/release/libsnake_backend.a:
 	cargo build --verbose --release --manifest-path backend/Cargo.toml
 
-build: backend/target/release/librust_snake.a
-	gcc -o snake frontend/src/main.c frontend/src/frontend.c backend/target/release/librust_snake.a -lncurses -ldl -lpthread -lm
+build: backend/target/release/libsnake_backend.a
+	gcc -o snake frontend/src/main.c frontend/src/frontend.c backend/target/release/libsnake_backend.a -lncurses -ldl -lpthread -lm
 
 run: build
 	./snake
 
-tests: backend/target/release/librust_snake.a
+tests: backend/target/release/libsnake_backend.a
 	checkmk backend/test/test.ts > backend/test/test.c
-	gcc -o run_tests backend/test/test.c backend/target/release/librust_snake.a -lncurses -lcheck -lsubunit -lrt -lpthread -lm -ldl
+	gcc -o run_tests backend/test/test.c backend/target/release/libsnake_backend.a -lncurses -lcheck -lsubunit -lrt -lpthread -lm -ldl
 	./run_tests
 	cargo test --manifest-path backend/Cargo.toml
 
