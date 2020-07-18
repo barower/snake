@@ -73,28 +73,3 @@ enum Status move_snake(Board* board, enum Direction dir) {
   return SUCCESS;
 }
 
-PointList* next_move(Board* board, enum Direction dir) {
-  PointList* snake = board->snake;
-  int new_x = snake->x;
-  int new_y = snake->y;
-  switch(dir) {
-    case UP:
-      new_y = snake->y - 1;
-      break;
-    case DOWN:
-      new_y = snake->y + 1;
-      break;
-    case LEFT:
-      new_x = snake->x - 1;
-      break;
-    case RIGHT:
-      new_x = snake->x + 1;
-      break;
-  }
-  if (new_x < 0 || new_y < 0 || new_x >= board->xmax || new_y >= board->ymax) {
-    return NULL;
-  } else {
-    return create_cell(new_x, new_y);
-  }
-}
-

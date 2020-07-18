@@ -41,6 +41,25 @@ pub unsafe extern "C" fn is_same_place(cell1: *mut PointList, cell2: *mut PointL
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn next_move(board: *mut Board, dir: Direction) -> *mut PointList {
+    let snake: *mut PointList = (*board).snake;
+    let mut new_x: c_int = (*snake).x;
+    let mut new_y: c_int = (*snake).y;
+    match dir {
+        Direction::UP => { new_y = (*snake).y - 1 },
+        Direction::DOWN => { new_y = (*snake).y + 1 },
+        Direction::LEFT => { new_x = (*snake).x - 1 },
+        Direction::RIGHT => { new_x = (*snake).x + 1 },
+    }
+    if (new_x < 0) || (new_y < 0) || (new_x >= (*board).xmax) || (new_y >= (*board).ymax) {
+        ptr::null_mut()
+    } else {
+        create_cell(new_x, new_y)
+    }
+}
+
+
+#[no_mangle]
 pub unsafe extern "C" fn list_contains(cell: *mut PointList, list: *mut PointList) -> bool {
     let mut s: *mut PointList = list;
     while s != ptr::null_mut() {
