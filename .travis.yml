@@ -1,8 +1,8 @@
-matrix:
-        include:
-                - language: rust
-                  rust: stable
-                - language: c
+language: rust
+rust: stable
+
+before_install:
+        - sudo apt-get -y install check
 
 script:
         - make
