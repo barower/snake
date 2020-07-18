@@ -1,0 +1,9 @@
+matrix:
+        include:
+                - language: rust
+                  rust: stable
+                - language: c
+
+script:
+        - make
+        - make tests
