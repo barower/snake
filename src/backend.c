@@ -98,10 +98,6 @@ PointList* next_move(Board* board, enum Direction dir) {
   }
 }
 
-PointList* create_random_cell(int xmax, int ymax) {
-  return create_cell(rand() % xmax, rand() % ymax);
-}
-
 void add_new_food(Board* board) {
   PointList* new_food;
   do {

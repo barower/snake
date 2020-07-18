@@ -1,7 +1,10 @@
 extern crate libc;
+extern crate rand;
+
 use libc::{c_int, malloc};
 use std::ptr;
 use std::mem::size_of;
+use rand::Rng;
 
 #[repr(C)]
 pub enum Direction {
@@ -33,12 +36,12 @@ pub struct Board {
 }
 
 #[no_mangle]
-pub unsafe extern fn is_same_place(cell1: *mut PointList, cell2: *mut PointList) -> bool {
+pub unsafe extern "C" fn is_same_place(cell1: *mut PointList, cell2: *mut PointList) -> bool {
     ((*cell1).x == (*cell2).x) && ((*cell1).y == (*cell2).y)
 }
 
 #[no_mangle]
-pub unsafe extern fn list_contains(cell: *mut PointList, list: *mut PointList) -> bool {
+pub unsafe extern "C" fn list_contains(cell: *mut PointList, list: *mut PointList) -> bool {
     let mut s: *mut PointList = list;
     while s != ptr::null_mut() {
         if is_same_place(s, cell) {
@@ -50,10 +53,16 @@ pub unsafe extern fn list_contains(cell: *mut PointList, list: *mut PointList) -
 }
 
 #[no_mangle]
-pub unsafe extern fn create_cell(x: c_int, y: c_int) -> *mut PointList {
+pub unsafe extern "C" fn create_cell(x: c_int, y: c_int) -> *mut PointList {
     let cell: *mut PointList = malloc(size_of::<PointList>()) as *mut PointList;
     (*cell).x = x;
     (*cell).y = y;
     (*cell).next = ptr::null_mut();
     cell
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn create_random_cell(xmax: c_int, ymax: c_int) -> *mut PointList {
+    let mut rng = rand::thread_rng();
+    create_cell(rng.gen_range(0, xmax-1), rng.gen_range(0, ymax-1))
 }
