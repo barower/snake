@@ -4,6 +4,11 @@ rust: stable
 before_install:
         - sudo apt-get -y install check
 
-script:
-        - make
-        - make tests
+jobs:
+        include:
+                - stage: "Build"
+                  name: "Build"
+                  script: make
+                - stage: "Unit Tests"
+                  name: "Unit Tests"
+                  script: make tests
