@@ -4,7 +4,7 @@ use ncurses::*;
 use crate::backend::*;
 
 #[no_mangle]
-pub unsafe extern "C" fn get_next_move(previous: Direction) -> Direction {
+pub unsafe fn get_next_move(previous: Direction) -> Direction {
     let ch = getch();
     match ch {
         KEY_LEFT => { if let Direction::RIGHT = previous { previous } else { Direction::LEFT } }
@@ -16,7 +16,7 @@ pub unsafe extern "C" fn get_next_move(previous: Direction) -> Direction {
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn display_points(mut snake: *mut PointList, symbol: chtype) {
+pub unsafe fn display_points(mut snake: *mut PointList, symbol: chtype) {
     while snake != ptr::null_mut() {
         mvaddch((*snake).y as i32, (*snake).x as i32, symbol);
         snake = (*snake).next;
