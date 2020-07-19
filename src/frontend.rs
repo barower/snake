@@ -14,7 +14,7 @@ pub unsafe fn get_next_move(previous: Direction) -> Direction {
     }
 }
 
-pub unsafe fn display_points(mut snake: *mut PointList, symbol: chtype) {
+pub unsafe fn display_points(mut snake: *mut Point, symbol: chtype) {
     while snake != ptr::null_mut() {
         mvaddch((*snake).y as i32, (*snake).x as i32, symbol);
         snake = (*snake).next;

@@ -14,26 +14,26 @@ pub enum Direction {
     RIGHT,
 }
 
-pub struct PointList {
+pub struct Point {
     pub x: i32,
     pub y: i32,
-    pub next: *mut PointList,
+    pub next: *mut Point,
 }
 
 pub struct Board {
-    pub snake: *mut PointList,
-    pub foods: *mut PointList,
+    pub snake: *mut Point,
+    pub foods: *mut Point,
     xmax: i32,
     ymax: i32,
 }
 
-fn is_same_place(cell1: &PointList, cell2: &PointList) -> bool {
+fn is_same_place(cell1: &Point, cell2: &Point) -> bool {
     (cell1.x == cell2.x) && (cell1.y == cell2.y)
 }
 
 pub unsafe fn move_snake(board: *mut Board, dir: Direction) -> Result<(), ()> {
     // Create a new beginning. Check boundaries.
-    let beginning: *mut PointList = next_move(board, dir);
+    let beginning: *mut Point = next_move(board, dir);
     if beginning == ptr::null_mut() {
         return Err(());
     }
@@ -66,7 +66,7 @@ pub unsafe fn move_snake(board: *mut Board, dir: Direction) -> Result<(), ()> {
     (*board).snake = beginning;
 
     // Cut off the end
-    let mut end: *mut PointList = (*board).snake;
+    let mut end: *mut Point = (*board).snake;
     while (*(*end).next).next != ptr::null_mut() {
         end = (*end).next;
     }
@@ -77,8 +77,8 @@ pub unsafe fn move_snake(board: *mut Board, dir: Direction) -> Result<(), ()> {
 }
 
 
-unsafe fn next_move(board: *mut Board, dir: Direction) -> *mut PointList {
-    let snake: *mut PointList = (*board).snake;
+unsafe fn next_move(board: *mut Board, dir: Direction) -> *mut Point {
+    let snake: *mut Point = (*board).snake;
     let mut new_x: i32 = (*snake).x;
     let mut new_y: i32 = (*snake).y;
     match dir {
@@ -95,8 +95,8 @@ unsafe fn next_move(board: *mut Board, dir: Direction) -> *mut PointList {
 }
 
 
-unsafe fn list_contains(cell: *mut PointList, list: *mut PointList) -> bool {
-    let mut s: *mut PointList = list;
+unsafe fn list_contains(cell: *mut Point, list: *mut Point) -> bool {
+    let mut s: *mut Point = list;
     while s != ptr::null_mut() {
         if is_same_place(&*s, &*cell) {
             return true;
@@ -106,27 +106,27 @@ unsafe fn list_contains(cell: *mut PointList, list: *mut PointList) -> bool {
     return false;
 }
 
-unsafe fn create_cell(x: i32, y: i32) -> *mut PointList {
-    let cell: *mut PointList = malloc(size_of::<PointList>()) as *mut PointList;
+unsafe fn create_cell(x: i32, y: i32) -> *mut Point {
+    let cell: *mut Point = malloc(size_of::<Point>()) as *mut Point;
     (*cell).x = x;
     (*cell).y = y;
     (*cell).next = ptr::null_mut();
     cell
 }
 
-unsafe fn create_random_cell(xmax: i32, ymax: i32) -> *mut PointList {
+unsafe fn create_random_cell(xmax: i32, ymax: i32) -> *mut Point {
     let mut rng = rand::thread_rng();
     create_cell(rng.gen_range(0, xmax-1), rng.gen_range(0, ymax-1))
 }
 
-pub unsafe fn create_snake() -> *mut PointList {
-    let a: *mut PointList = create_cell(2,2);
-    let b: *mut PointList = create_cell(2,3);
+pub unsafe fn create_snake() -> *mut Point {
+    let a: *mut Point = create_cell(2,2);
+    let b: *mut Point = create_cell(2,3);
     (*a).next = b;
     a
 }
 
-pub unsafe fn create_board(snake: *mut PointList, foods: *mut PointList, xmax: i32, ymax: i32) -> *mut Board {
+pub unsafe fn create_board(snake: *mut Point, foods: *mut Point, xmax: i32, ymax: i32) -> *mut Board {
     let board: *mut Board = malloc(size_of::<Board>()) as *mut Board;
     (*board).foods = foods;
     (*board).snake = snake;
@@ -138,9 +138,9 @@ pub unsafe fn create_board(snake: *mut PointList, foods: *mut PointList, xmax: i
 /*
  * Removes from the list or returns false
  */
-unsafe fn remove_from_list(elt: *mut PointList, list: *mut *mut PointList) -> bool {
-    let mut curr_p: *mut PointList = *list;
-    let mut prev_p: *mut PointList = ptr::null_mut();
+unsafe fn remove_from_list(elt: *mut Point, list: *mut *mut Point) -> bool {
+    let mut curr_p: *mut Point = *list;
+    let mut prev_p: *mut Point = ptr::null_mut();
 
     // Originally a for loop
     while curr_p != ptr::null_mut() {
@@ -162,7 +162,7 @@ unsafe fn remove_from_list(elt: *mut PointList, list: *mut *mut PointList) -> bo
 }
 
 pub unsafe fn add_new_food(board: *mut Board) {
-    let mut new_food: *mut PointList;
+    let mut new_food: *mut Point;
     loop {
         // Ouch
         new_food = create_random_cell((*board).xmax, (*board).ymax);
