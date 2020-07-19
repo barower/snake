@@ -1,21 +1,7 @@
 use libc::c_int;
 use std::ptr;
 use ncurses::*;
-
-#[repr(C)]
-pub enum Direction {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-}
-
-#[repr(C)]
-pub struct PointList {
-    x: c_int,
-    y: c_int,
-    next: *mut PointList,
-}
+use snake_backend::*;
 
 #[no_mangle]
 pub unsafe extern "C" fn get_next_move(previous: Direction) -> Direction {

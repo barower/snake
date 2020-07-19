@@ -7,6 +7,7 @@ use std::mem::size_of;
 use rand::Rng;
 
 #[repr(C)]
+#[derive(Copy, Clone)]
 pub enum Direction {
     UP,
     DOWN,
@@ -22,15 +23,15 @@ pub enum Status {
 
 #[repr(C)]
 pub struct PointList {
-    x: c_int,
-    y: c_int,
-    next: *mut PointList,
+    pub x: c_int,
+    pub y: c_int,
+    pub next: *mut PointList,
 }
 
 #[repr(C)]
 pub struct Board {
-    snake: *mut PointList,
-    foods: *mut PointList,
+    pub snake: *mut PointList,
+    pub foods: *mut PointList,
     xmax: c_int,
     ymax: c_int,
 }

@@ -11,8 +11,8 @@ struct PointList {
 typedef struct PointList PointList;
 
 typedef struct {
-  PointList* snake;
-  PointList* foods;
+  pub PointList* snake;
+  pub PointList* foods;
   int xmax;
   int ymax;
 } Board;

@@ -1,16 +1,10 @@
 default: build
 
-backend/target/release/libsnake_backend.a:
-	cargo build --verbose --release --manifest-path backend/Cargo.toml
-
-frontend/target/release/libsnake_frontend.a:
+build:
 	cargo build --verbose --release --manifest-path frontend/Cargo.toml
 
-build: backend/target/release/libsnake_backend.a frontend/target/release/libsnake_frontend.a
-	gcc -o snake frontend/src/main.c backend/target/release/libsnake_backend.a frontend/target/release/libsnake_frontend.a -lncurses -ldl -lpthread -lm
-
 run: build
-	./snake
+	cargo run --manifest-path frontend/Cargo.toml
 
 tests: backend/target/release/libsnake_backend.a
 	checkmk backend/test/test.ts > backend/test/test.c
