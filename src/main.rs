@@ -29,8 +29,7 @@ fn main() {
             frontend::display_points((*board).foods, ACS_DIAMOND());
             refresh();
             dir = frontend::get_next_move(dir);
-            let status: backend::Status = backend::move_snake(board, dir);
-            if let backend::Status::FAILURE = status { break; }
+            if let Err(()) = backend::move_snake(board, dir) { break; }
         }
     }
 

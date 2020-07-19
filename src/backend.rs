@@ -14,11 +14,6 @@ pub enum Direction {
     RIGHT,
 }
 
-pub enum Status {
-    SUCCESS,
-    FAILURE,
-}
-
 pub struct PointList {
     pub x: c_int,
     pub y: c_int,
@@ -36,23 +31,23 @@ fn is_same_place(cell1: &PointList, cell2: &PointList) -> bool {
     (cell1.x == cell2.x) && (cell1.y == cell2.y)
 }
 
-pub unsafe fn move_snake(board: *mut Board, dir: Direction) -> Status {
+pub unsafe fn move_snake(board: *mut Board, dir: Direction) -> Result<(), ()> {
     // Create a new beginning. Check boundaries.
     let beginning: *mut PointList = next_move(board, dir);
     if beginning == ptr::null_mut() {
-        return Status::FAILURE;
+        return Err(());
     }
 
     // If we've gone backwards, don't do anything
     if (*(*board).snake).next != ptr::null_mut() && is_same_place(&*beginning, &*(*(*board).snake).next) {
         (*beginning).next = ptr::null_mut();
         free(beginning as *mut c_void);
-        return Status::SUCCESS;
+        return Ok(());
     }
 
     // Check for collisions
     if list_contains(beginning, (*board).snake) {
-        return Status::FAILURE;
+        return Err(());
     }
 
     // Check for food
@@ -63,7 +58,7 @@ pub unsafe fn move_snake(board: *mut Board, dir: Direction) -> Status {
         remove_from_list(beginning, &mut((*board).foods));
         add_new_food(board);
 
-        return Status::SUCCESS;
+        return Ok(());
     }
 
     // Attach the beginning to the rest of the snake
@@ -78,7 +73,7 @@ pub unsafe fn move_snake(board: *mut Board, dir: Direction) -> Status {
     free((*end).next as *mut c_void);
     (*end).next = ptr::null_mut();
 
-    return Status::SUCCESS;
+    Ok(())
 }
 
 
