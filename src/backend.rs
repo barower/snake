@@ -1,7 +1,7 @@
 extern crate libc;
 extern crate rand;
 
-use libc::{c_int, c_void, malloc, free};
+use libc::{c_void, malloc, free};
 use std::ptr;
 use std::mem::size_of;
 use rand::Rng;
@@ -15,16 +15,16 @@ pub enum Direction {
 }
 
 pub struct PointList {
-    pub x: c_int,
-    pub y: c_int,
+    pub x: i32,
+    pub y: i32,
     pub next: *mut PointList,
 }
 
 pub struct Board {
     pub snake: *mut PointList,
     pub foods: *mut PointList,
-    xmax: c_int,
-    ymax: c_int,
+    xmax: i32,
+    ymax: i32,
 }
 
 fn is_same_place(cell1: &PointList, cell2: &PointList) -> bool {
@@ -79,8 +79,8 @@ pub unsafe fn move_snake(board: *mut Board, dir: Direction) -> Result<(), ()> {
 
 unsafe fn next_move(board: *mut Board, dir: Direction) -> *mut PointList {
     let snake: *mut PointList = (*board).snake;
-    let mut new_x: c_int = (*snake).x;
-    let mut new_y: c_int = (*snake).y;
+    let mut new_x: i32 = (*snake).x;
+    let mut new_y: i32 = (*snake).y;
     match dir {
         Direction::UP => { new_y = (*snake).y - 1 },
         Direction::DOWN => { new_y = (*snake).y + 1 },
@@ -106,7 +106,7 @@ unsafe fn list_contains(cell: *mut PointList, list: *mut PointList) -> bool {
     return false;
 }
 
-unsafe fn create_cell(x: c_int, y: c_int) -> *mut PointList {
+unsafe fn create_cell(x: i32, y: i32) -> *mut PointList {
     let cell: *mut PointList = malloc(size_of::<PointList>()) as *mut PointList;
     (*cell).x = x;
     (*cell).y = y;
@@ -114,7 +114,7 @@ unsafe fn create_cell(x: c_int, y: c_int) -> *mut PointList {
     cell
 }
 
-unsafe fn create_random_cell(xmax: c_int, ymax: c_int) -> *mut PointList {
+unsafe fn create_random_cell(xmax: i32, ymax: i32) -> *mut PointList {
     let mut rng = rand::thread_rng();
     create_cell(rng.gen_range(0, xmax-1), rng.gen_range(0, ymax-1))
 }
@@ -126,7 +126,7 @@ pub unsafe fn create_snake() -> *mut PointList {
     a
 }
 
-pub unsafe fn create_board(snake: *mut PointList, foods: *mut PointList, xmax: c_int, ymax: c_int) -> *mut Board {
+pub unsafe fn create_board(snake: *mut PointList, foods: *mut PointList, xmax: i32, ymax: i32) -> *mut Board {
     let board: *mut Board = malloc(size_of::<Board>()) as *mut Board;
     (*board).foods = foods;
     (*board).snake = snake;
