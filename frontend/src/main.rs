@@ -15,7 +15,7 @@ fn main() {
     let mut xmax: i32 = 0;
     let mut ymax: i32 = 0;
     getmaxyx(stdscr(), &mut ymax, &mut xmax);
-    let dir: Direction = Direction::RIGHT;
+    let mut dir: Direction = Direction::RIGHT;
 
     unsafe {
         let board: *mut Board = create_board(create_snake(), ptr::null_mut(), xmax, ymax);
@@ -28,8 +28,8 @@ fn main() {
             frontend::display_points((*board).snake, ACS_BLOCK());
             frontend::display_points((*board).foods, ACS_DIAMOND());
             refresh();
-            let dir: Direction = frontend::get_next_move(dir);
-            let status: Status = move_snake(board, dir.clone());
+            dir = frontend::get_next_move(dir);
+            let status: Status = move_snake(board, dir);
             if let Status::FAILURE = status { break; }
         }
     }
