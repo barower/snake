@@ -36,7 +36,6 @@ fn is_same_place(cell1: &PointList, cell2: &PointList) -> bool {
     (cell1.x == cell2.x) && (cell1.y == cell2.y)
 }
 
-#[no_mangle]
 pub unsafe fn move_snake(board: *mut Board, dir: Direction) -> Status {
     // Create a new beginning. Check boundaries.
     let beginning: *mut PointList = next_move(board, dir);
@@ -83,7 +82,6 @@ pub unsafe fn move_snake(board: *mut Board, dir: Direction) -> Status {
 }
 
 
-#[no_mangle]
 pub unsafe fn next_move(board: *mut Board, dir: Direction) -> *mut PointList {
     let snake: *mut PointList = (*board).snake;
     let mut new_x: c_int = (*snake).x;
@@ -102,7 +100,6 @@ pub unsafe fn next_move(board: *mut Board, dir: Direction) -> *mut PointList {
 }
 
 
-#[no_mangle]
 pub unsafe fn list_contains(cell: *mut PointList, list: *mut PointList) -> bool {
     let mut s: *mut PointList = list;
     while s != ptr::null_mut() {
@@ -114,7 +111,6 @@ pub unsafe fn list_contains(cell: *mut PointList, list: *mut PointList) -> bool 
     return false;
 }
 
-#[no_mangle]
 pub unsafe fn create_cell(x: c_int, y: c_int) -> *mut PointList {
     let cell: *mut PointList = malloc(size_of::<PointList>()) as *mut PointList;
     (*cell).x = x;
@@ -123,13 +119,11 @@ pub unsafe fn create_cell(x: c_int, y: c_int) -> *mut PointList {
     cell
 }
 
-#[no_mangle]
 pub unsafe fn create_random_cell(xmax: c_int, ymax: c_int) -> *mut PointList {
     let mut rng = rand::thread_rng();
     create_cell(rng.gen_range(0, xmax-1), rng.gen_range(0, ymax-1))
 }
 
-#[no_mangle]
 pub unsafe fn create_snake() -> *mut PointList {
     let a: *mut PointList = create_cell(2,2);
     let b: *mut PointList = create_cell(2,3);
@@ -137,7 +131,6 @@ pub unsafe fn create_snake() -> *mut PointList {
     a
 }
 
-#[no_mangle]
 pub unsafe fn create_board(snake: *mut PointList, foods: *mut PointList, xmax: c_int, ymax: c_int) -> *mut Board {
     let board: *mut Board = malloc(size_of::<Board>()) as *mut Board;
     (*board).foods = foods;
@@ -150,7 +143,6 @@ pub unsafe fn create_board(snake: *mut PointList, foods: *mut PointList, xmax: c
 /*
  * Removes from the list or returns false
  */
-#[no_mangle]
 pub unsafe fn remove_from_list(elt: *mut PointList, list: *mut *mut PointList) -> bool {
     let mut curr_p: *mut PointList = *list;
     let mut prev_p: *mut PointList = ptr::null_mut();
@@ -174,7 +166,6 @@ pub unsafe fn remove_from_list(elt: *mut PointList, list: *mut *mut PointList) -
     false
 }
 
-#[no_mangle]
 pub unsafe fn add_new_food(board: *mut Board) {
     let mut new_food: *mut PointList;
     loop {
