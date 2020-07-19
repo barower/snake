@@ -82,7 +82,7 @@ pub unsafe fn move_snake(board: *mut Board, dir: Direction) -> Status {
 }
 
 
-pub unsafe fn next_move(board: *mut Board, dir: Direction) -> *mut PointList {
+unsafe fn next_move(board: *mut Board, dir: Direction) -> *mut PointList {
     let snake: *mut PointList = (*board).snake;
     let mut new_x: c_int = (*snake).x;
     let mut new_y: c_int = (*snake).y;
@@ -100,7 +100,7 @@ pub unsafe fn next_move(board: *mut Board, dir: Direction) -> *mut PointList {
 }
 
 
-pub unsafe fn list_contains(cell: *mut PointList, list: *mut PointList) -> bool {
+unsafe fn list_contains(cell: *mut PointList, list: *mut PointList) -> bool {
     let mut s: *mut PointList = list;
     while s != ptr::null_mut() {
         if is_same_place(&*s, &*cell) {
@@ -111,7 +111,7 @@ pub unsafe fn list_contains(cell: *mut PointList, list: *mut PointList) -> bool 
     return false;
 }
 
-pub unsafe fn create_cell(x: c_int, y: c_int) -> *mut PointList {
+unsafe fn create_cell(x: c_int, y: c_int) -> *mut PointList {
     let cell: *mut PointList = malloc(size_of::<PointList>()) as *mut PointList;
     (*cell).x = x;
     (*cell).y = y;
@@ -119,7 +119,7 @@ pub unsafe fn create_cell(x: c_int, y: c_int) -> *mut PointList {
     cell
 }
 
-pub unsafe fn create_random_cell(xmax: c_int, ymax: c_int) -> *mut PointList {
+unsafe fn create_random_cell(xmax: c_int, ymax: c_int) -> *mut PointList {
     let mut rng = rand::thread_rng();
     create_cell(rng.gen_range(0, xmax-1), rng.gen_range(0, ymax-1))
 }
@@ -143,7 +143,7 @@ pub unsafe fn create_board(snake: *mut PointList, foods: *mut PointList, xmax: c
 /*
  * Removes from the list or returns false
  */
-pub unsafe fn remove_from_list(elt: *mut PointList, list: *mut *mut PointList) -> bool {
+unsafe fn remove_from_list(elt: *mut PointList, list: *mut *mut PointList) -> bool {
     let mut curr_p: *mut PointList = *list;
     let mut prev_p: *mut PointList = ptr::null_mut();
 
