@@ -15,51 +15,6 @@
     fail_unless(board->snake != NULL);
     fail_unless(board->snake->x == 0);
 
-
-
-#test test_move_snake_length_1
-    PointList* snake = create_cell(0, 0);
-    Board* board = create_board(snake, NULL, 2, 2);
-    fail_unless(move_snake(board, LEFT) == FAILURE);
-    fail_unless(move_snake(board, UP) == FAILURE);
-    fail_unless(move_snake(board, DOWN) == SUCCESS);
-    fail_unless(move_snake(board, DOWN) == FAILURE);
-
-#test test_move_snake_backwards
-    PointList* snake = create_cell(2, 2);
-    snake->next = create_cell(2, 3);
-    Board* board = create_board(snake, NULL, 2, 2);
-    move_snake(board, DOWN);
-    fail_unless(board->snake->x == 2);
-    fail_unless(board->snake->y == 2);
-
-#test test_move_snake_collision
-    PointList* snake = create_cell(2, 2);
-    snake->next = create_cell(2, 3);
-    snake->next->next = create_cell(3, 3);
-    snake->next->next->next = create_cell(3, 2);
-    Board* board = create_board(snake, NULL, 4, 4);
-    fail_unless(move_snake(board, RIGHT) == FAILURE);
-
-#test test_move_snake_down
-    PointList* snake = create_cell(2, 2);
-    Board* board = create_board(snake, NULL, 4, 4);
-    move_snake(board, DOWN);
-    fail_unless(board->snake->x == 2);
-    fail_unless(board->snake->y == 3);
-
-
-#test test_move_snake_normally
-    PointList* snake = create_cell(2, 2);
-    snake->next = create_cell(2, 3);
-    Board* board = create_board(snake, NULL, 4, 4);
-    move_snake(board, UP);
-    fail_unless(board->snake->x == 2);
-    fail_unless(board->snake->y == 1);
-    fail_unless(board->snake->next->x == 2);
-    fail_unless(board->snake->next->y == 2);
-    fail_unless(board->snake->next->next == NULL);
-
 // Remove
 #test test_next_move_corner
     PointList* snake = create_cell(0, 0);

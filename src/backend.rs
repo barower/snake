@@ -184,5 +184,67 @@ mod tests {
         divide_non_zero_result(1, 10);
     }
     */
+
+    #[test]
+    fn test_move_snake_length_1() {
+        unsafe {
+            let snake: *mut Point = create_cell(0, 0);
+            let board: *mut Board = create_board(snake, ptr::null_mut(), 2, 2);
+            assert_eq!(move_snake(&mut *board, Direction::LEFT), Err(()));
+            assert_eq!(move_snake(&mut *board, Direction::UP), Err(()));
+            assert_eq!(move_snake(&mut *board, Direction::DOWN), Ok(()));
+            assert_eq!(move_snake(&mut *board, Direction::DOWN), Err(()));
+        }
+    }
+
+    #[test]
+    fn test_move_snake_backwards() {
+        unsafe {
+            let snake: *mut Point = create_cell(2, 2);
+            (*snake).next = create_cell(2, 3);
+            let board: *mut Board = create_board(snake, ptr::null_mut(), 2, 2);
+            assert_eq!(move_snake(&mut *board, Direction::DOWN), Err(()));
+            assert_eq!((*(*board).snake).x, 2);
+            assert_eq!((*(*board).snake).y, 2);
+        }
+    }
+
+    #[test]
+    fn test_move_snake_collision() {
+        unsafe {
+            let snake: *mut Point = create_cell(2, 2);
+            (*snake).next = create_cell(2, 3);
+            (*(*snake).next).next = create_cell(3, 3);
+            (*(*(*snake).next).next).next = create_cell(3, 2);
+            let board: *mut Board = create_board(snake, ptr::null_mut(), 4, 4);
+            assert_eq!(move_snake(&mut *board, Direction::RIGHT), Err(()));
+        }
+    }
+
+    #[test]
+    fn test_move_snake_down() {
+        unsafe {
+            let snake: *mut Point = create_cell(2, 2);
+            let board: *mut Board = create_board(snake, ptr::null_mut(), 4, 4);
+            assert_eq!(move_snake(&mut *board, Direction::DOWN), Ok(()));
+            assert_eq!((*(*board).snake).x, 2);
+            assert_eq!((*(*board).snake).y, 3);
+        }
+    }
+
+    #[test]
+    fn test_move_snake_normally() {
+        unsafe {
+            let snake: *mut Point = create_cell(2, 2);
+            (*snake).next = create_cell(2, 3);
+            let board: *mut Board = create_board(snake, ptr::null_mut(), 4, 4);
+            assert_eq!(move_snake(&mut *board, Direction::UP), Ok(()));
+            assert_eq!((*(*board).snake).x, 2);
+            assert_eq!((*(*board).snake).y, 1);
+            assert_eq!((*(*(*board).snake).next).x, 2);
+            assert_eq!((*(*(*board).snake).next).y, 2);
+            assert_eq!((*(*(*board).snake).next).next, ptr::null_mut());
+        }
+    }
 }
 
