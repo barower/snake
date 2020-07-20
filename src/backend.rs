@@ -33,10 +33,7 @@ fn is_same_place(cell1: &Point, cell2: &Point) -> bool {
 
 pub unsafe fn move_snake(board: &mut Board, dir: Direction) -> Option<()> {
     // Create a new beginning. Check boundaries.
-    let beginning: *mut Point = next_move(board, dir);
-    if beginning == ptr::null_mut() {
-        return None;
-    }
+    let beginning: *mut Point = next_move(board, dir)?;
 
     // If we've gone backwards, don't do anything
     if (*board.snake).next != ptr::null_mut() && is_same_place(&*beginning, &*(*board.snake).next) {
@@ -77,7 +74,7 @@ pub unsafe fn move_snake(board: &mut Board, dir: Direction) -> Option<()> {
 }
 
 
-unsafe fn next_move(board: &Board, dir: Direction) -> *mut Point {
+unsafe fn next_move(board: &Board, dir: Direction) -> Option<*mut Point> {
     let snake: *mut Point = board.snake;
     let mut new_x: i32 = (*snake).x;
     let mut new_y: i32 = (*snake).y;
@@ -88,9 +85,9 @@ unsafe fn next_move(board: &Board, dir: Direction) -> *mut Point {
         Direction::RIGHT => { new_x = (*snake).x + 1 },
     }
     if (new_x < 0) || (new_y < 0) || (new_x >= board.xmax) || (new_y >= board.ymax) {
-        ptr::null_mut()
+        None
     } else {
-        create_cell(new_x, new_y)
+        Some(create_cell(new_x, new_y))
     }
 }
 
