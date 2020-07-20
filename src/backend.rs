@@ -77,8 +77,8 @@ pub unsafe fn move_snake(board: &mut Board, dir: Direction) -> Result<(), ()> {
 }
 
 
-unsafe fn next_move(board: *mut Board, dir: Direction) -> *mut Point {
-    let snake: *mut Point = (*board).snake;
+unsafe fn next_move(board: &Board, dir: Direction) -> *mut Point {
+    let snake: *mut Point = board.snake;
     let mut new_x: i32 = (*snake).x;
     let mut new_y: i32 = (*snake).y;
     match dir {
@@ -87,7 +87,7 @@ unsafe fn next_move(board: *mut Board, dir: Direction) -> *mut Point {
         Direction::LEFT => { new_x = (*snake).x - 1 },
         Direction::RIGHT => { new_x = (*snake).x + 1 },
     }
-    if (new_x < 0) || (new_y < 0) || (new_x >= (*board).xmax) || (new_y >= (*board).ymax) {
+    if (new_x < 0) || (new_y < 0) || (new_x >= board.xmax) || (new_y >= board.ymax) {
         ptr::null_mut()
     } else {
         create_cell(new_x, new_y)
