@@ -31,7 +31,7 @@ fn is_same_place(cell1: &Point, cell2: &Point) -> bool {
     (cell1.x == cell2.x) && (cell1.y == cell2.y)
 }
 
-pub unsafe fn move_snake(board: *mut Board, dir: Direction) -> Result<(), ()> {
+pub unsafe fn move_snake(board: &mut Board, dir: Direction) -> Result<(), ()> {
     // Create a new beginning. Check boundaries.
     let beginning: *mut Point = next_move(board, dir);
     if beginning == ptr::null_mut() {
@@ -39,34 +39,34 @@ pub unsafe fn move_snake(board: *mut Board, dir: Direction) -> Result<(), ()> {
     }
 
     // If we've gone backwards, don't do anything
-    if (*(*board).snake).next != ptr::null_mut() && is_same_place(&*beginning, &*(*(*board).snake).next) {
+    if (*board.snake).next != ptr::null_mut() && is_same_place(&*beginning, &*(*board.snake).next) {
         (*beginning).next = ptr::null_mut();
         free(beginning as *mut c_void);
         return Ok(());
     }
 
     // Check for collisions
-    if list_contains(beginning, (*board).snake) {
+    if list_contains(beginning, board.snake) {
         return Err(());
     }
 
     // Check for food
-    if list_contains(beginning, (*board).foods) {
+    if list_contains(beginning, board.foods) {
         // Attach the beginning to the rest of the snake;
-        (*beginning).next = (*board).snake;
-        (*board).snake = beginning;
-        remove_from_list(beginning, &mut((*board).foods));
+        (*beginning).next = board.snake;
+        board.snake = beginning;
+        remove_from_list(beginning, &mut(board.foods));
         add_new_food(board);
 
         return Ok(());
     }
 
     // Attach the beginning to the rest of the snake
-    (*beginning).next = (*board).snake;
-    (*board).snake = beginning;
+    (*beginning).next = board.snake;
+    board.snake = beginning;
 
     // Cut off the end
-    let mut end: *mut Point = (*board).snake;
+    let mut end: *mut Point = board.snake;
     while (*(*end).next).next != ptr::null_mut() {
         end = (*end).next;
     }
