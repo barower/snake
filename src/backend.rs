@@ -258,6 +258,24 @@ mod tests {
     }
 
     #[test]
+    fn test_move_snake_with_food() {
+        unsafe {
+            let snake: *mut Point = create_cell(1, 2);
+            let foods: *mut Point = create_cell(2, 2);
+            let mut board = Box::new(Board::new(snake, foods, 10, 10));
+            board.move_snake(Direction::RIGHT);
+            assert_eq!((*board.snake).x, 2);
+            assert_eq!((*board.snake).y, 2);
+            assert_ne!((*board.snake).next, ptr::null_mut());
+            assert_eq!((*(*board.snake).next).x, 1);
+            assert_eq!((*(*board.snake).next).y, 2);
+
+            assert!((*board.foods).x != 2 || (*board.foods).y != 2);
+        }
+    }
+
+
+    #[test]
     fn test_add_new_food_null() {
         unsafe {
             let snake: *mut Point = create_cell(4, 2);

@@ -31,19 +31,6 @@
     list->next = create_cell(1, 2);
     fail_unless(!list_contains(cell, list));
 
-#test test_move_snake_with_food
-    PointList* snake = create_cell(1, 2);
-    PointList* foods = create_cell(2, 2);
-    Board* board = create_board(snake, foods, 10, 10);
-    move_snake(board, RIGHT);
-    fail_unless(board->snake->x == 2);
-    fail_unless(board->snake->y == 2);
-    fail_unless(board->snake->next != NULL);
-    fail_unless(board->snake->next->x == 1);
-    fail_unless(board->snake->next->y == 2);
-
-    fail_unless(board->foods->x != 2 || board->foods->y != 2);
-
 // Remove
 #test test_remove_from_list_true
     PointList* cell = create_cell(1, 2);
