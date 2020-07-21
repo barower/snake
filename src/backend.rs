@@ -37,9 +37,26 @@ impl Board {
         }
     }
 
+    unsafe fn next_move(&mut self, dir: Direction) -> Option<*mut Point> {
+        let snake: *mut Point = self.snake;
+        let mut new_x: i32 = (*snake).x;
+        let mut new_y: i32 = (*snake).y;
+        match dir {
+            Direction::UP => { new_y = (*snake).y - 1 },
+            Direction::DOWN => { new_y = (*snake).y + 1 },
+            Direction::LEFT => { new_x = (*snake).x - 1 },
+            Direction::RIGHT => { new_x = (*snake).x + 1 },
+        }
+        if (new_x < 0) || (new_y < 0) || (new_x >= self.xmax) || (new_y >= self.ymax) {
+            None
+        } else {
+            Some(create_cell(new_x, new_y))
+        }
+    }
+
     pub unsafe fn move_snake(&mut self, dir: Direction) -> Option<()> {
         // Create a new beginning. Check boundaries.
-        let beginning: *mut Point = next_move(self, dir)?;
+        let beginning: *mut Point = self.next_move(dir)?;
 
         // If we've gone backwards, don't do anything
         if (*self.snake).next != ptr::null_mut() && is_same_place(&*beginning, &*(*self.snake).next) {
@@ -95,26 +112,6 @@ impl Board {
 fn is_same_place(cell1: &Point, cell2: &Point) -> bool {
     (cell1.x == cell2.x) && (cell1.y == cell2.y)
 }
-
-
-
-unsafe fn next_move(board: &Board, dir: Direction) -> Option<*mut Point> {
-    let snake: *mut Point = board.snake;
-    let mut new_x: i32 = (*snake).x;
-    let mut new_y: i32 = (*snake).y;
-    match dir {
-        Direction::UP => { new_y = (*snake).y - 1 },
-        Direction::DOWN => { new_y = (*snake).y + 1 },
-        Direction::LEFT => { new_x = (*snake).x - 1 },
-        Direction::RIGHT => { new_x = (*snake).x + 1 },
-    }
-    if (new_x < 0) || (new_y < 0) || (new_x >= board.xmax) || (new_y >= board.ymax) {
-        None
-    } else {
-        Some(create_cell(new_x, new_y))
-    }
-}
-
 
 unsafe fn list_contains(cell: *mut Point, list: *mut Point) -> bool {
     let mut s: *mut Point = list;
