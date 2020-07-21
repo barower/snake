@@ -20,6 +20,12 @@ pub struct Point {
     pub next: *mut Point,
 }
 
+impl Point {
+    fn is_same_place(cell1: &Point, cell2: &Point) -> bool {
+        (cell1.x == cell2.x) && (cell1.y == cell2.y)
+    }
+}
+
 pub struct Board {
     pub snake: *mut Point,
     pub foods: *mut Point,
@@ -59,7 +65,7 @@ impl Board {
         let beginning: *mut Point = self.next_move(dir)?;
 
         // If we've gone backwards, don't do anything
-        if (*self.snake).next != ptr::null_mut() && is_same_place(&*beginning, &*(*self.snake).next) {
+        if (*self.snake).next != ptr::null_mut() && Point::is_same_place(&*beginning, &*(*self.snake).next) {
             (*beginning).next = ptr::null_mut();
             free(beginning as *mut c_void);
             return Some(());
@@ -109,14 +115,10 @@ impl Board {
 
 }
 
-fn is_same_place(cell1: &Point, cell2: &Point) -> bool {
-    (cell1.x == cell2.x) && (cell1.y == cell2.y)
-}
-
 unsafe fn list_contains(cell: *mut Point, list: *mut Point) -> bool {
     let mut s: *mut Point = list;
     while s != ptr::null_mut() {
-        if is_same_place(&*s, &*cell) {
+        if Point::is_same_place(&*s, &*cell) {
             return true;
         }
         s = (*s).next;
@@ -153,7 +155,7 @@ unsafe fn remove_from_list(elt: *mut Point, list: *mut *mut Point) -> bool {
 
     // Originally a for loop
     while curr_p != ptr::null_mut() {
-        if is_same_place(&*curr_p, &*elt) {
+        if Point::is_same_place(&*curr_p, &*elt) {
             if prev_p == ptr::null_mut() {
                 *list = (*curr_p).next;
             } else {
