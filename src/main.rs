@@ -29,7 +29,7 @@ fn main() {
             frontend::display_points((*board).foods, ACS_DIAMOND());
             refresh();
             dir = frontend::get_next_move(dir);
-            if let None = backend::move_snake(&mut *board, dir) { break; }
+            if let None = board.move_snake(dir) { break; }
         }
     }
 
