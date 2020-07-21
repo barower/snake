@@ -16,40 +16,6 @@
     fail_unless(board->snake->x == 0);
 
 // Remove
-#test test_next_move_corner
-    PointList* snake = create_cell(0, 0);
-    Board* board = create_board(snake, NULL, 2, 2);
-    fail_unless(next_move(board, UP) == NULL);
-    fail_unless(next_move(board, LEFT) == NULL);
-    fail_unless(next_move(board, DOWN) != NULL);
-    fail_unless(next_move(board, RIGHT) != NULL);
-
-// Remove
-#test test_next_move_bottom
-    PointList* snake = create_cell(0, 1);
-    Board* board = create_board(snake, NULL, 2, 2);
-    fail_unless(next_move(board, LEFT) == NULL);
-    fail_unless(next_move(board, DOWN) == NULL);
-    fail_unless(next_move(board, UP) != NULL);
-    fail_unless(next_move(board, RIGHT) != NULL);
-
-// Remove
-#test test_next_move_left
-    PointList* snake = create_cell(1, 2);
-    Board* board = create_board(snake, NULL, 4, 4);
-    PointList* moved = next_move(board, LEFT);
-    fail_unless(moved->x == 0);
-    fail_unless(moved->y == 2);
-
-// Remove
-#test test_next_move_up
-    PointList* snake = create_cell(2, 2);
-    Board* board = create_board(snake, NULL, 4, 4);
-    PointList* moved = next_move(board, UP);
-    fail_unless(moved->x == 2);
-    fail_unless(moved->y == 1);
-
-// Remove
 #test test_create_random_cell
     PointList* cell1 = create_random_cell(20, 10);
     PointList* cell2 = create_random_cell(20, 10);

@@ -271,5 +271,52 @@ mod tests {
             assert_eq!((*(*board.foods).next).next, ptr::null_mut());
         }
     }
+
+    #[test]
+    fn test_next_move_corner() {
+        unsafe {
+            let snake: *mut Point = create_cell(0, 0);
+            let mut board = Box::new(Board::new(snake, ptr::null_mut(), 2, 2));
+            assert_eq!(board.next_move(Direction::UP), None);
+            assert_eq!(board.next_move(Direction::LEFT), None);
+            assert_ne!(board.next_move(Direction::DOWN), None);
+            assert_ne!(board.next_move(Direction::RIGHT), None);
+        }
+    }
+
+    #[test]
+    fn test_next_move_bottom() {
+        unsafe {
+            let snake: *mut Point = create_cell(0, 1);
+            let mut board = Box::new(Board::new(snake, ptr::null_mut(), 2, 2));
+            assert_eq!(board.next_move(Direction::LEFT), None);
+            assert_eq!(board.next_move(Direction::DOWN), None);
+            assert_ne!(board.next_move(Direction::UP), None);
+            assert_ne!(board.next_move(Direction::RIGHT), None);
+        }
+    }
+
+    #[test]
+    fn test_next_move_left() {
+        unsafe {
+            let snake: *mut Point = create_cell(1, 2);
+            let mut board = Box::new(Board::new(snake, ptr::null_mut(), 4, 4));
+            let moved: *mut Point = board.next_move(Direction::LEFT).unwrap();
+            assert_eq!((*moved).x, 0);
+            assert_eq!((*moved).y, 2);
+        }
+    }
+
+    #[test]
+    fn test_next_move_up() {
+        unsafe {
+            let snake: *mut Point = create_cell(2, 2);
+            let mut board = Box::new(Board::new(snake, ptr::null_mut(), 4, 4));
+            let moved: *mut Point = board.next_move(Direction::UP).unwrap();
+            assert_eq!((*moved).x, 2);
+            assert_eq!((*moved).y, 1);
+        }
+    }
+
 }
 
