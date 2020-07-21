@@ -20,7 +20,7 @@ fn main() {
     unsafe {
         let mut board = Box::new(backend::Board::new(backend::create_snake(), ptr::null_mut(), xmax, ymax));
         for _i in 1..=6 {
-            backend::add_new_food(&mut *board);
+            board.add_new_food();
         }
 
         loop {

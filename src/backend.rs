@@ -59,7 +59,7 @@ impl Board {
             (*beginning).next = self.snake;
             self.snake = beginning;
             remove_from_list(beginning, &mut(self.foods));
-            add_new_food(self);
+            self.add_new_food();
 
             return Some(());
         }
@@ -78,6 +78,18 @@ impl Board {
 
             Some(())
     }
+
+    pub unsafe fn add_new_food(&mut self) {
+        let mut new_food: *mut Point;
+        loop {
+            // Freed inside remove_from_list
+            new_food = create_random_cell(self.xmax, self.ymax);
+            if !(list_contains(new_food, self.foods) || list_contains(new_food, self.snake)) { break; }
+        }
+        (*new_food).next = self.foods;
+        self.foods = new_food;
+    }
+
 }
 
 fn is_same_place(cell1: &Point, cell2: &Point) -> bool {
@@ -159,17 +171,6 @@ unsafe fn remove_from_list(elt: *mut Point, list: *mut *mut Point) -> bool {
     }
 
     false
-}
-
-pub unsafe fn add_new_food(board: *mut Board) {
-    let mut new_food: *mut Point;
-    loop {
-        // Freed inside remove_from_list
-        new_food = create_random_cell((*board).xmax, (*board).ymax);
-        if !(list_contains(new_food, (*board).foods) || list_contains(new_food, (*board).snake)) { break; }
-    }
-    (*new_food).next = (*board).foods;
-    (*board).foods = new_food;
 }
 
 
