@@ -18,9 +18,9 @@ fn main() {
     let mut dir: backend::Direction = backend::Direction::RIGHT;
 
     unsafe {
-        let board: *mut backend::Board = backend::create_board(backend::create_snake(), ptr::null_mut(), xmax, ymax);
+        let mut board = Box::new(backend::Board::new(backend::create_snake(), ptr::null_mut(), xmax, ymax));
         for _i in 1..=6 {
-            backend::add_new_food(board);
+            backend::add_new_food(&mut *board);
         }
 
         loop {

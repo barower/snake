@@ -27,6 +27,17 @@ pub struct Board {
     ymax: i32,
 }
 
+impl Board {
+    pub fn new(snake: *mut Point, foods: *mut Point, xmax: i32, ymax: i32) -> Board {
+        Board {
+            foods: foods,
+            snake: snake,
+            xmax: xmax,
+            ymax: ymax,
+        }
+    }
+}
+
 fn is_same_place(cell1: &Point, cell2: &Point) -> bool {
     (cell1.x == cell2.x) && (cell1.y == cell2.y)
 }
@@ -121,15 +132,6 @@ pub unsafe fn create_snake() -> *mut Point {
     let b: *mut Point = create_cell(2,3);
     (*a).next = b;
     a
-}
-
-pub unsafe fn create_board(snake: *mut Point, foods: *mut Point, xmax: i32, ymax: i32) -> *mut Board {
-    let board: *mut Board = malloc(size_of::<Board>()) as *mut Board;
-    (*board).foods = foods;
-    (*board).snake = snake;
-    (*board).xmax = xmax;
-    (*board).ymax = ymax;
-    board
 }
 
 /*
