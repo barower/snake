@@ -184,6 +184,18 @@ mod tests {
     */
 
     #[test]
+    fn test_board_new() {
+        unsafe {
+            let snake: *mut Point = create_cell(0, 0);
+            let board = Box::new(Board::new(snake, ptr::null_mut(), 2, 3));
+            assert_eq!(board.xmax, 2);
+            assert_eq!(board.ymax, 3);
+            assert_ne!(board.snake, ptr::null_mut());
+            assert_eq!((*board.snake).x, 0);
+        }
+    }
+
+    #[test]
     fn test_move_snake_length_1() {
         unsafe {
             let snake: *mut Point = create_cell(0, 0);

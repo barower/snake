@@ -7,14 +7,6 @@
     fail_unless(snake->x == 2);
     fail_unless(snake->y == 3);
 
-#test test_create_board
-    PointList* snake = create_cell(0, 0);
-    Board* board = create_board(snake, NULL, 2, 3);
-    fail_unless(board->xmax == 2);
-    fail_unless(board->ymax == 3);
-    fail_unless(board->snake != NULL);
-    fail_unless(board->snake->x == 0);
-
 // Remove
 #test test_create_random_cell
     PointList* cell1 = create_random_cell(20, 10);
