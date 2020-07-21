@@ -73,25 +73,6 @@
     list->next = create_cell(1, 2);
     fail_unless(!list_contains(cell, list));
 
-#test test_add_new_food_null
-    PointList* snake = create_cell(4, 2);
-    snake->next = create_cell(4,3);
-    Board* board = create_board(snake, NULL, 20, 10);
-    add_new_food(board);
-    PointList* foods = board->foods;
-    fail_unless(foods != NULL);
-    fail_unless(foods->next == NULL);
-    fail_unless(!list_contains(foods, snake));
-
-#test test_add_new_food
-    PointList* snake = create_cell(4, 2);
-    snake->next = create_cell(4,3);
-    PointList* foods = create_cell(3, 3);
-    Board* board = create_board(snake, foods, 20, 10);
-    add_new_food(board);
-    fail_unless(board->foods->next != NULL);
-    fail_unless(board->foods->next->next == NULL);
-
 #test test_move_snake_with_food
     PointList* snake = create_cell(1, 2);
     PointList* foods = create_cell(2, 2);

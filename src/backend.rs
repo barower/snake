@@ -247,5 +247,32 @@ mod tests {
             assert_eq!((*(*(*board).snake).next).next, ptr::null_mut());
         }
     }
+
+    #[test]
+    fn test_add_new_food_null() {
+        unsafe {
+            let snake: *mut Point = create_cell(4, 2);
+            (*snake).next = create_cell(4,3);
+            let mut board = Box::new(Board::new(snake, ptr::null_mut(), 20, 10));
+            board.add_new_food();
+            let foods: *mut Point = board.foods;
+            assert_ne!(foods, ptr::null_mut());
+            assert_eq!((*foods).next, ptr::null_mut());
+            assert!(!list_contains(foods, snake));
+        }
+    }
+
+    #[test]
+    fn test_add_new_food() {
+        unsafe {
+            let snake: *mut Point = create_cell(4, 2);
+            (*snake).next = create_cell(4,3);
+            let foods: *mut Point = create_cell(3, 3);
+            let mut board = Box::new(Board::new(snake, foods, 20, 10));
+            board.add_new_food();
+            assert_ne!((*board.foods).next, ptr::null_mut());
+            assert_eq!((*(*board.foods).next).next, ptr::null_mut());
+        }
+    }
 }
 
