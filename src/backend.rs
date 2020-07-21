@@ -43,28 +43,42 @@ impl Point {
     }
 }
 
+impl PartialEq for Point {
+    fn eq(&self, other: &Self) -> bool {
+        (self.x == other.x) && (self.y == other.y)
+    }
+}
+
 struct PointList {
     list: VecDeque<Point>,
 }
 
 impl PointList {
 
-    /*
-    fn new_snake() -> {
+    fn new_snake() -> PointList {
+        let mut list: VecDeque<Point> = VecDeque::new();
+        list.push_front(Point::new(2,3));
+        list.push_front(Point::new(2,2));
+        PointList{
+            list: list,
+        }
     }
 
-    fn add_beginning() -> {
+    fn add_beginning(&mut self, p: Point) {
+        self.list.push_front(p);
     }
 
-    rm remove_back() -> {
+    fn remove_back(&mut self) {
+        self.list.pop_back();
     }
 
-    fn contains() -> {
+    fn contains(&mut self, p: &Point) -> bool {
+        self.list.contains(&p)
     }
 
-    fn remove() -> {
+    fn remove(&mut self, p: &Point) {
+        self.list.retain(|x| *x != *p);
     }
-    */
 
 }
 
