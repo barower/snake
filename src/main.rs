@@ -18,15 +18,15 @@ fn main() {
     let mut dir: backend::Direction = backend::Direction::RIGHT;
 
     unsafe {
-        let mut board = Box::new(backend::Board::new(backend::create_snake(), ptr::null_mut(), xmax, ymax));
+        let mut board = Box::new(backend::Board::new(backend::PointList::new_snake(), backend::PointList::new_empty(), xmax, ymax));
         for _i in 1..=6 {
             board.add_new_food();
         }
 
         loop {
             clear();
-            frontend::display_points((*board).snake, ACS_BLOCK());
-            frontend::display_points((*board).foods, ACS_DIAMOND());
+            frontend::display_points(&board.snake, ACS_BLOCK());
+            frontend::display_points(&board.foods, ACS_DIAMOND());
             refresh();
             dir = frontend::get_next_move(dir);
             if let None = board.move_snake(dir) { break; }

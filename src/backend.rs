@@ -14,10 +14,10 @@ pub enum Direction {
     RIGHT,
 }
 
+#[derive(Copy, Clone)]
 pub struct Point {
     pub x: i32,
     pub y: i32,
-    pub next: *mut Point,
 }
 
 impl Point {
@@ -25,7 +25,6 @@ impl Point {
         Point {
             x: x,
             y: y,
-            next: ptr::null_mut(),
         }
     }
 
@@ -34,12 +33,7 @@ impl Point {
         Point {
             x: rng.gen_range(0, xmax-1),
             y: rng.gen_range(0, ymax-1),
-            next: ptr::null_mut(),
         }
-    }
-
-    fn is_same_place(cell1: &Point, cell2: &Point) -> bool {
-        (cell1.x == cell2.x) && (cell1.y == cell2.y)
     }
 }
 
@@ -49,23 +43,30 @@ impl PartialEq for Point {
     }
 }
 
-struct PointList {
-    list: VecDeque<Point>,
+pub struct PointList {
+    pub list: VecDeque<Point>,
 }
 
 impl PointList {
 
-    fn new_snake() -> PointList {
-        let mut list: VecDeque<Point> = VecDeque::new();
-        list.push_front(Point::new(2,3));
-        list.push_front(Point::new(2,2));
-        PointList{
+    pub fn new_empty() -> PointList {
+        let list: VecDeque<Point> = VecDeque::new();
+        PointList {
             list: list,
         }
     }
 
-    fn add_beginning(&mut self, p: Point) {
-        self.list.push_front(p);
+    pub fn new_snake() -> PointList {
+        let mut list: VecDeque<Point> = VecDeque::new();
+        list.push_front(Point::new(2,3));
+        list.push_front(Point::new(2,2));
+        PointList {
+            list: list,
+        }
+    }
+
+    fn add_beginning(&mut self, p: &Point) {
+        self.list.push_front(p.clone());
     }
 
     fn remove_back(&mut self) {
@@ -83,14 +84,14 @@ impl PointList {
 }
 
 pub struct Board {
-    pub snake: *mut Point,
-    pub foods: *mut Point,
+    pub snake: PointList,
+    pub foods: PointList,
     xmax: i32,
     ymax: i32,
 }
 
 impl Board {
-    pub fn new(snake: *mut Point, foods: *mut Point, xmax: i32, ymax: i32) -> Board {
+    pub fn new(snake: PointList, foods: PointList, xmax: i32, ymax: i32) -> Board {
         Board {
             foods: foods,
             snake: snake,
@@ -99,135 +100,67 @@ impl Board {
         }
     }
 
-    unsafe fn next_move(&mut self, dir: Direction) -> Option<*mut Point> {
-        let snake: *mut Point = self.snake;
-        let mut new_x: i32 = (*snake).x;
-        let mut new_y: i32 = (*snake).y;
+    unsafe fn next_move(&mut self, dir: Direction) -> Option<Point> {
+        let snake_head: &Point = &self.snake.list[0];
+        let mut new_x: i32 = snake_head.x;
+        let mut new_y: i32 = snake_head.y;
         match dir {
-            Direction::UP => { new_y = (*snake).y - 1 },
-            Direction::DOWN => { new_y = (*snake).y + 1 },
-            Direction::LEFT => { new_x = (*snake).x - 1 },
-            Direction::RIGHT => { new_x = (*snake).x + 1 },
+            Direction::UP => { new_y = snake_head.y - 1 },
+            Direction::DOWN => { new_y = snake_head.y + 1 },
+            Direction::LEFT => { new_x = snake_head.x - 1 },
+            Direction::RIGHT => { new_x = snake_head.x + 1 },
         }
         if (new_x < 0) || (new_y < 0) || (new_x >= self.xmax) || (new_y >= self.ymax) {
             None
         } else {
-            Some(create_cell(new_x, new_y))
+            Some(Point::new(new_x, new_y))
         }
     }
 
     pub unsafe fn move_snake(&mut self, dir: Direction) -> Option<()> {
         // Create a new beginning. Check boundaries.
-        let beginning: *mut Point = self.next_move(dir)?;
+        let beginning: Point = self.next_move(dir)?;
 
         // If we've gone backwards, don't do anything
-        if (*self.snake).next != ptr::null_mut() && Point::is_same_place(&*beginning, &*(*self.snake).next) {
-            (*beginning).next = ptr::null_mut();
-            free(beginning as *mut c_void);
+        if self.snake.list.len() > 1 && beginning == self.snake.list[1] {
             return Some(());
         }
 
         // Check for collisions
-        if list_contains(beginning, self.snake) {
+        if self.snake.contains(&beginning) {
             return None;
         }
 
         // Check for food
-        if list_contains(beginning, self.foods) {
+        if self.foods.contains(&beginning) {
             // Attach the beginning to the rest of the snake;
-            (*beginning).next = self.snake;
-            self.snake = beginning;
-            remove_from_list(beginning, &mut(self.foods));
+            self.snake.add_beginning(&beginning);
+            self.foods.remove(&beginning);
             self.add_new_food();
 
             return Some(());
         }
 
         // Attach the beginning to the rest of the snake
-        (*beginning).next = self.snake;
-        self.snake = beginning;
+        self.snake.add_beginning(&beginning);
 
         // Cut off the end
-        let mut end: *mut Point = self.snake;
-        while (*(*end).next).next != ptr::null_mut() {
-            end = (*end).next;
-        }
-        free((*end).next as *mut c_void);
-        (*end).next = ptr::null_mut();
+        self.snake.remove_back();
 
-            Some(())
+        Some(())
     }
 
     pub unsafe fn add_new_food(&mut self) {
-        let mut new_food: *mut Point;
+        let mut new_food: Point;
         loop {
             // Freed inside remove_from_list
-            new_food = create_random_cell(self.xmax, self.ymax);
-            if !(list_contains(new_food, self.foods) || list_contains(new_food, self.snake)) { break; }
+            new_food = Point::new_random(self.xmax, self.ymax);
+            if !(self.foods.contains(&new_food) || self.snake.contains(&new_food)) { break; }
         }
-        (*new_food).next = self.foods;
-        self.foods = new_food;
+        self.foods.add_beginning(&new_food);
     }
 
 }
-
-unsafe fn list_contains(cell: *mut Point, list: *mut Point) -> bool {
-    let mut s: *mut Point = list;
-    while s != ptr::null_mut() {
-        if Point::is_same_place(&*s, &*cell) {
-            return true;
-        }
-        s = (*s).next;
-    }
-    return false;
-}
-
-unsafe fn create_cell(x: i32, y: i32) -> *mut Point {
-    let cell: *mut Point = malloc(size_of::<Point>()) as *mut Point;
-    (*cell).x = x;
-    (*cell).y = y;
-    (*cell).next = ptr::null_mut();
-    cell
-}
-
-unsafe fn create_random_cell(xmax: i32, ymax: i32) -> *mut Point {
-    let mut rng = rand::thread_rng();
-    create_cell(rng.gen_range(0, xmax-1), rng.gen_range(0, ymax-1))
-}
-
-pub unsafe fn create_snake() -> *mut Point {
-    let a: *mut Point = create_cell(2,2);
-    let b: *mut Point = create_cell(2,3);
-    (*a).next = b;
-    a
-}
-
-/*
- * Removes from the list or returns false
- */
-unsafe fn remove_from_list(elt: *mut Point, list: *mut *mut Point) -> bool {
-    let mut curr_p: *mut Point = *list;
-    let mut prev_p: *mut Point = ptr::null_mut();
-
-    // Originally a for loop
-    while curr_p != ptr::null_mut() {
-        if Point::is_same_place(&*curr_p, &*elt) {
-            if prev_p == ptr::null_mut() {
-                *list = (*curr_p).next;
-            } else {
-                (*prev_p).next = (*curr_p).next;
-            }
-            free(curr_p as *mut c_void);
-            return true;
-        }
-
-        prev_p = curr_p;
-        curr_p = (*curr_p).next;
-    }
-
-    false
-}
-
 
 #[cfg(test)]
 mod tests {
