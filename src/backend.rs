@@ -100,7 +100,7 @@ impl Board {
         }
     }
 
-    unsafe fn next_move(&mut self, dir: Direction) -> Option<Point> {
+    fn next_move(&mut self, dir: Direction) -> Option<Point> {
         let snake_head: &Point = &self.snake.list[0];
         let mut new_x: i32 = snake_head.x;
         let mut new_y: i32 = snake_head.y;
@@ -117,7 +117,7 @@ impl Board {
         }
     }
 
-    pub unsafe fn move_snake(&mut self, dir: Direction) -> Option<()> {
+    pub fn move_snake(&mut self, dir: Direction) -> Option<()> {
         // Create a new beginning. Check boundaries.
         let beginning: Point = self.next_move(dir)?;
 
@@ -150,7 +150,7 @@ impl Board {
         Some(())
     }
 
-    pub unsafe fn add_new_food(&mut self) {
+    pub fn add_new_food(&mut self) {
         let mut new_food: Point;
         loop {
             // Freed inside remove_from_list

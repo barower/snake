@@ -3,7 +3,7 @@ use ncurses::*;
 
 use crate::backend::*;
 
-pub unsafe fn get_next_move(previous: Direction) -> Direction {
+pub fn get_next_move(previous: Direction) -> Direction {
     let ch = getch();
     match ch {
         KEY_LEFT => { if let Direction::RIGHT = previous { previous } else { Direction::LEFT } }
@@ -14,7 +14,7 @@ pub unsafe fn get_next_move(previous: Direction) -> Direction {
     }
 }
 
-pub unsafe fn display_points(list: &PointList, symbol: chtype) {
+pub fn display_points(list: &PointList, symbol: chtype) {
     for point in list.list.iter() {
         mvaddch(point.y, point.x, symbol);
     }
