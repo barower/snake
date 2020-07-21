@@ -2,7 +2,7 @@ extern crate libc;
 extern crate rand;
 
 use libc::{c_void, malloc, free};
-use std::ptr;
+use std::{ptr, collections::VecDeque};
 use std::mem::size_of;
 use rand::Rng;
 
@@ -21,9 +21,51 @@ pub struct Point {
 }
 
 impl Point {
+    fn new(x: i32, y: i32) -> Point {
+        Point {
+            x: x,
+            y: y,
+            next: ptr::null_mut(),
+        }
+    }
+
+    fn new_random(xmax: i32, ymax: i32) -> Point {
+        let mut rng = rand::thread_rng();
+        Point {
+            x: rng.gen_range(0, xmax-1),
+            y: rng.gen_range(0, ymax-1),
+            next: ptr::null_mut(),
+        }
+    }
+
     fn is_same_place(cell1: &Point, cell2: &Point) -> bool {
         (cell1.x == cell2.x) && (cell1.y == cell2.y)
     }
+}
+
+struct PointList {
+    list: VecDeque<Point>,
+}
+
+impl PointList {
+
+    /*
+    fn new_snake() -> {
+    }
+
+    fn add_beginning() -> {
+    }
+
+    rm remove_back() -> {
+    }
+
+    fn contains() -> {
+    }
+
+    fn remove() -> {
+    }
+    */
+
 }
 
 pub struct Board {
