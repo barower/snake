@@ -164,14 +164,6 @@ impl Board {
 mod tests {
     use super::*;
 
-    /*
-    #[test]
-    #[should_panic(expected = "Divide result is zero")]
-    fn test_specific_panic() {
-        divide_non_zero_result(1, 10);
-    }
-    */
-
     #[test]
     fn test_board_new() {
         let mut snake: PointList = PointList::new_empty();

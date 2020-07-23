@@ -19,11 +19,3 @@ pub fn display_points(list: &PointList, symbol: chtype) {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}
-
