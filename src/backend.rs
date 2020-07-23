@@ -12,7 +12,7 @@ pub enum Direction {
     RIGHT,
 }
 
-#[derive(Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub struct Point {
     pub x: i32,
     pub y: i32,
@@ -289,7 +289,6 @@ mod tests {
         assert_eq!(board.foods.list.len(), 2);
     }
 
-/*
     #[test]
     fn test_next_move_corner() {
         let mut snake: PointList = PointList::new_empty();
@@ -313,7 +312,6 @@ mod tests {
         assert_ne!(board.next_move(Direction::UP), None);
         assert_ne!(board.next_move(Direction::RIGHT), None);
     }
-*/
 
     #[test]
     fn test_next_move_left() {
