@@ -1,5 +1,4 @@
 use ncurses::*;
-use std::ptr;
 
 mod frontend;
 mod backend;

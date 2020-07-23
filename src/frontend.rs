@@ -1,4 +1,3 @@
-use std::ptr;
 use ncurses::*;
 
 use crate::backend::*;

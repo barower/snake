@@ -1,9 +1,7 @@
 extern crate libc;
 extern crate rand;
 
-use libc::{c_void, malloc, free};
-use std::{ptr, collections::VecDeque};
-use std::mem::size_of;
+use std::collections::VecDeque;
 use rand::Rng;
 
 #[derive(Copy, Clone)]
