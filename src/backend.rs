@@ -165,6 +165,62 @@ mod tests {
     use super::*;
 
     #[test]
+    fn test_point_new() {
+        let point: Point = Point::new(2, 3);
+        assert_eq!(point.x, 2);
+        assert_eq!(point.y, 3);
+    }
+
+    /*
+    #[test]
+    fn test_point_new_random() {
+        for _i in 1..10000 {
+            let mut plist: PointList = PointList::new_empty();
+            plist.add_beginning(&Point::new_random(20, 10));
+            plist.add_beginning(&Point::new_random(20, 10));
+
+            let cell1 = plist.list[0];
+            let cell2 = plist.list[1];
+
+            assert!(!(cell1.x == cell2.x && cell1.y == cell2.y));
+            assert!(cell1.x < 20);
+            assert!(cell2.x < 20);
+            assert!(cell1.y < 10);
+            assert!(cell2.y < 10);
+        }
+    }
+    */
+
+    #[test]
+    fn test_pointlist_contains_true() {
+        let cell: Point = Point::new(1, 2);
+        let mut list: PointList = PointList::new_empty();
+        list.add_beginning(&Point{x: 1, y: 2});
+        list.add_beginning(&Point{x: 2, y: 2});
+        assert!(list.contains(&cell));
+    }
+
+    #[test]
+    fn test_remove_from_list_true() {
+        let cell: Point = Point::new(1, 2);
+        let mut list: PointList = PointList::new_empty();
+        list.add_beginning(&Point::new(1, 2));
+        list.add_beginning(&Point::new(2, 2));
+        list.remove(&cell);
+        assert!(!list.contains(&cell));
+    }
+
+    #[test]
+    fn test_remove_from_list_false() {
+        let cell: Point = Point::new(3, 2);
+        let mut list: PointList = PointList::new_empty();
+        list.add_beginning(&Point{x: 1, y: 2});
+        list.add_beginning(&Point{x: 2, y: 2});
+        list.remove(&cell);
+        assert_eq!(list.list.len(), 2);
+    }
+
+    #[test]
     fn test_board_new() {
         let mut snake: PointList = PointList::new_empty();
         snake.add_beginning(&Point{x: 0, y: 0});
