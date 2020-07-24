@@ -1,22 +1,16 @@
 snake
 =====
 
-Simple snake game written in C using ncurses.
+Simple snake game using ncurses. Originally written in C, ported to Rust!
+Inspired by "Rust out your C" talk (https://github.com/carols10cents/rust-out-your-c-talk)
 
 You can run it using
 
 ```
-make run
+cargo run
 ```
-Then do
+To run unit tests:
 ```
-./snake
+cargo test
 ```
 
-This was the biggest C program I'd written so far, so I'm pretty happy
-with it. There's a separate frontend and backend so theoretically it
-could be easily extended to have a graphical frontend instead of a
-ncurses frontend, but I'm unlikely to actually do that.
-
-There are also unit tests, which require [checkmk](http://mathias-kettner.de/checkmk.html)
-to work.
