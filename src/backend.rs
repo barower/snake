@@ -171,10 +171,9 @@ mod tests {
         assert_eq!(point.y, 3);
     }
 
-    /*
     #[test]
     fn test_point_new_random() {
-        for _i in 1..10000 {
+        for _i in 1..50000 {
             let mut plist: PointList = PointList::new_empty();
             plist.add_beginning(&Point::new_random(20, 10));
             plist.add_beginning(&Point::new_random(20, 10));
@@ -182,14 +181,12 @@ mod tests {
             let cell1 = plist.list[0];
             let cell2 = plist.list[1];
 
-            assert!(!(cell1.x == cell2.x && cell1.y == cell2.y));
             assert!(cell1.x < 20);
             assert!(cell2.x < 20);
             assert!(cell1.y < 10);
             assert!(cell2.y < 10);
         }
     }
-    */
 
     #[test]
     fn test_pointlist_contains_true() {
